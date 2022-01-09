@@ -5,7 +5,6 @@ import (
 	v1 "GDForum/app/http/controllers/api/v1"
 	"GDForum/app/models/user"
 	"GDForum/app/requests"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,23 +15,9 @@ type SignupController struct {
 }
 //IsPhoneExist 检测手机号是否被注册
 func (sc *SignupController)IsPhoneExist(c *gin.Context){
-
+	//获取请求参数并做表单验证
 	request := requests.SignupPhoneExistRequest{}
-
-	if err := c.ShouldBindJSON(&request);err != nil{
-		//解析失败，返回422状态码和错误信息
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity,gin.H{
-			"err":err.Error(),
-		})
-		fmt.Println(err.Error())
-		return
-	}
-	//表单验证
-	errs := requests.ValidateSignupPhoneExist(&request,c)
-	if len(errs) > 0{
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity,gin.H{
-			"errors":errs,
-		})
+	if ok := requests.Validate(c,&request,requests.ValidateSignupPhoneExist); !ok{
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
@@ -43,18 +28,7 @@ func (sc *SignupController)IsPhoneExist(c *gin.Context){
 //IsEmailExist 检查邮箱是否已被注册
 func (sc *SignupController)IsEmailExist(c *gin.Context){
 	request := requests.SignupEmailExistRequest{}
-	if err := c.ShouldBindJSON(&request);err != nil{
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity,gin.H{
-			"err":err.Error(),
-		})
-		fmt.Println(err.Error())
-		return
-	}
-	errs := requests.ValidateSignupEmailExist(&request,c)
-	if len(errs) > 0 {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"errors": errs,
-		})
+	if ok := requests.Validate(c,&request,requests.ValidateSignupEmailExist);!ok{
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
