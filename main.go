@@ -20,8 +20,8 @@ func main() {
 
 	//初始化Logger
 	bootstrap.SetupLogger()
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-
 	//初始化DB
 	bootstrap.SetupDB()
 	//初始化路由绑定
