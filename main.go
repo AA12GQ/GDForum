@@ -2,10 +2,10 @@ package main
 
 import (
 	"GDForum/bootstrap"
-	"flag"
-	"fmt"
 	btsConig "GDForum/config"
 	"GDForum/pkg/config"
+	"flag"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 func init(){
