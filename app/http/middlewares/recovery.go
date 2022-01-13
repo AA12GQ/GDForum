@@ -1,15 +1,15 @@
 package middlewares
 
 import (
-	"github.com/gin-gonic/gin"
 	"GDForum/pkg/logger"
+	"GDForum/pkg/response"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"net/http"
 	"net"
-	"time"
 	"net/http/httputil"
-	"strings"
 	"os"
+	"strings"
+	"time"
 )
 
 // Recovery 使用 zap.Error() 来记录 Panic 和 call stack
@@ -53,9 +53,7 @@ func Recovery()gin.HandlerFunc{
 				)
 
 				// 返回 500 状态码
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"message": "服务器内部错误，请稍后再试",
-				})
+				response.Abort500(c)
 			}
 		}()
 		c.Next()

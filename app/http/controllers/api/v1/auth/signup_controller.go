@@ -5,6 +5,7 @@ import (
 	v1 "GDForum/app/http/controllers/api/v1"
 	"GDForum/app/models/user"
 	"GDForum/app/requests"
+	"GDForum/pkg/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,9 @@ func (sc *SignupController)IsPhoneExist(c *gin.Context){
 	c.JSON(http.StatusOK,gin.H{
 		"exist":user.IsPhoneExist(request.Phone),
 	})
+	response.JSON(c,gin.H{
+		"exist" : user.IsPhoneExist(request.Phone),
+	})
 }
 
 //IsEmailExist 检查邮箱是否已被注册
@@ -33,5 +37,8 @@ func (sc *SignupController)IsEmailExist(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"exist": user.IsEmailExist(request.Email),
+	})
+	response.JSON(c,gin.H{
+		"exist" : user.IsEmailExist(request.Email),
 	})
 }
