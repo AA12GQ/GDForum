@@ -4,6 +4,7 @@ import (
 	"GDForum/bootstrap"
 	btsConig "GDForum/config"
 	"GDForum/pkg/config"
+	"GDForum/pkg/sms"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,11 @@ func main() {
 	bootstrap.SetupRedis()
 	//初始化路由绑定
 	bootstrap.SetupRoute(router)
+
+	sms.NewSMS().Send("13017173106", sms.Message{
+		Template: config.GetString("sms.aliyun.template_code"),
+		Data:     map[string]string{"code": "123456"},
+	})
 
 	// 运行服务
 	err := router.Run(":" + config.Get("app.port"))
