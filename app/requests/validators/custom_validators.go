@@ -1,5 +1,6 @@
 package validators
 
+import "GDForum/pkg/captcha"
 
 //ValidatePasswordConfirm 自定义规则，验证两次输入密码是否正确
 func ValidatePasswordConfirm(password,passwordConfirm string,errs map[string][]string)map[string][]string{
@@ -21,4 +22,11 @@ func ValidateVerifyCode(key,answer string,errs map[string][]string)map[string][]
 	return errs
 }
 
+// ValidateCaptcha 自定义规则，验证『图片验证码』
+func ValidateCaptcha(captchaID, captchaAnswer string, errs map[string][]string) map[string][]string {
+	if ok := captcha.NewCaptcha().VerifyCaptcha(captchaID, captchaAnswer); !ok {
+		errs["captcha_answer"] = append(errs["captcha_answer"], "图片验证码错误")
+	}
+	return errs
+}
 
