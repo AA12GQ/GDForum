@@ -1,10 +1,11 @@
 package mail
 
 import (
+	"fmt"
 	"GDForum/pkg/logger"
 	"net/smtp"
+
 	emailPKG "github.com/jordan-wright/email"
-	"fmt"
 )
 
 // SMTP 实现 email.Driver interface

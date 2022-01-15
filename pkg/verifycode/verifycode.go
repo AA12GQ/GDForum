@@ -5,10 +5,12 @@ import (
 	"GDForum/pkg/config"
 	"GDForum/pkg/helpers"
 	"GDForum/pkg/logger"
+	"GDForum/pkg/mail"
 	"GDForum/pkg/redis"
 	"GDForum/pkg/sms"
 	"strings"
 	"sync"
+	"fmt"
 )
 
 type VerifyCode struct {
@@ -50,6 +52,7 @@ func (vc *VerifyCode) SendSMS(phone string) bool {
 		Data:     map[string]string{"code": code},
 	})
 }
+
 
 // CheckAnswer 检查用户提交的验证码是否正确，key 可以是手机号或者 Email
 func (vc *VerifyCode) CheckAnswer(key string, answer string) bool {
