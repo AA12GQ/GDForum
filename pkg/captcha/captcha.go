@@ -1,7 +1,7 @@
 package captcha
 
 import (
-	"GDForum/app/app"
+	"GDForum/pkg/app"
 	"GDForum/pkg/config"
 	"GDForum/pkg/redis"
 	"github.com/mojocn/base64Captcha"

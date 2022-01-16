@@ -6,6 +6,7 @@ import (
 	"GDForum/app/models/user"
 	"GDForum/app/requests"
 	"GDForum/pkg/response"
+	"GDForum/pkg/jwt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -49,15 +50,17 @@ func(sc *SignupController)SignupUsingPhone(c *gin.Context){
 	if ok := requests.Validate(c,&request,requests.SignupUsingPhone); ! ok{
 		return
 	}
-	_user := user.User{
+	userModel := user.User{
 		Name:request.Name,
 		Phone:request.Phone,
 		Password:request.Password,
 	}
-	_user.Create()
-	if _user.ID > 0{
+	userModel.Create()
+	if userModel.ID > 0{
+		token := jwt.NewJWT().IssueToken(userModel.GetStringID(), userModel.Name)
 		response.CreatedJSON(c,gin.H{
-			"data" : _user,
+			"token" :token,
+			"data" : userModel,
 		})
 	}else{
 		response.Abort500(c,"创建用户失败，请稍后再试~")
@@ -79,7 +82,9 @@ func (sc *SignupController)SignupUsingEmail(c *gin.Context){
 	userModel.Create()
 
 	if userModel.ID > 0{
+		token := jwt.NewJWT().IssueToken(userModel.GetStringID(), userModel.Name)
 		response.CreatedJSON(c,gin.H{
+			"token" :token,
 			"data" : userModel,
 		})
 	}else{

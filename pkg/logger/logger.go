@@ -2,7 +2,7 @@
 package logger
 
 import (
-	"GDForum/app/app"
+	"GDForum/pkg/app"
 	"encoding/json"
 	"fmt"
 	"go.uber.org/zap"

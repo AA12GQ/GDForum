@@ -1,7 +1,7 @@
 package verifycode
 
 import (
-	"GDForum/app/app"
+	"GDForum/pkg/app"
 	"GDForum/pkg/config"
 	"GDForum/pkg/redis"
 	"time"
