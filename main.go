@@ -1,9 +1,12 @@
 package main
 
 import (
+	"GDForum/app/http/middlewares"
 	"GDForum/bootstrap"
 	btsConig "GDForum/config"
+	"GDForum/pkg/auth"
 	"GDForum/pkg/config"
+	"GDForum/pkg/response"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -28,6 +31,7 @@ func main() {
 	bootstrap.SetupRedis()
 	//初始化路由绑定
 	bootstrap.SetupRoute(router)
+
 
 	//sms.NewSMS().Send("13017173106", sms.Message{
 	//	Template: config.GetString("sms.aliyun.template_code"),
