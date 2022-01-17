@@ -1,14 +1,12 @@
 package main
 
 import (
-	"GDForum/app/http/middlewares"
 	"GDForum/bootstrap"
 	btsConig "GDForum/config"
 	"GDForum/pkg/config"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 func init(){
 	// 加载 config 目录下的配置信息
