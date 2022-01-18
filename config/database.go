@@ -15,8 +15,8 @@ func init(){
 				"host":     config.Env("DB_HOST", "42.192.3.136"),
 				"port":     config.Env("DB_PORT", "23306"),
 				"database": config.Env("DB_DATABASE", "GDForum"),
-				"username": config.Env("DB_USERNAME", "root"),
-				"password": config.Env("DB_PASSWORD", "myy515156"),
+				"username": config.Env("DB_USERNAME", ""),
+				"password": config.Env("DB_PASSWORD", ""),
 				"charset":  "utf8mb4",
 
 				// 连接池配置

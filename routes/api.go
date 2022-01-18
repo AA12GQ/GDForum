@@ -2,38 +2,53 @@ package routes
 
 import (
 	"GDForum/app/http/controllers/api/v1/auth"
+	"GDForum/app/http/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterAPIRoutes 注册网页相关路由
 func RegisterAPIRoutes(r *gin.Engine){
 	v1 := r.Group("/v1")
+	v1.Use(middlewares.LimitIP("200-H"))
 	{
 		authGroup := v1.Group("/auth")
+		authGroup.Use(middlewares.LimitPerRoute("1000-H"))
 		{
 			suc := new(auth.SignupController)
 			//判断手机号是否被注册
-			authGroup.POST("/signup/phone/exist",suc.IsPhoneExist)
+			authGroup.POST("/signup/phone/exist",middlewares.GuestJWT(),
+				suc.IsPhoneExist)
 			//判断邮箱是否被注册
-			authGroup.POST("/signup/email/exist",suc.IsEmailExist)
-			authGroup.POST("/signup/using-phone", suc.SignupUsingPhone)
-			authGroup.POST("/signup/using-email",suc.SignupUsingEmail)
+			authGroup.POST("/signup/email/exist",middlewares.GuestJWT(),
+				suc.IsEmailExist)
+			authGroup.POST("/signup/using-phone",middlewares.GuestJWT(),
+				suc.SignupUsingPhone)
+			authGroup.POST("/signup/using-email",middlewares.GuestJWT(),
+				suc.SignupUsingEmail)
 			//发送验证码
 			vcc := new(auth.VerifyCodeController)
 			//图片验证码，需要加限流
-			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
-			authGroup.POST("/verify-codes/phone", vcc.SendUsingPhone)
-			authGroup.POST("/verify-codes/email", vcc.SendUsingEmail)
+			authGroup.POST("/verify-codes/captcha",middlewares.LimitPerRoute("50-H"),
+				vcc.ShowCaptcha)
+			authGroup.POST("/verify-codes/phone",middlewares.LimitPerRoute("20-H"),
+				vcc.SendUsingPhone)
+			authGroup.POST("/verify-codes/email",middlewares.LimitPerRoute("20-H"),
+				vcc.SendUsingEmail)
 			lgc := new(auth.LoginController)
 			// 使用手机号，短信验证码进行登录
-			authGroup.POST("/login/using-phone", lgc.LoginByPhone)
+			authGroup.POST("/login/using-phone",middlewares.GuestJWT(),
+				lgc.LoginByPhone)
 			// 支持手机号，Email 和 用户名
-			authGroup.POST("/login/using-password", lgc.LoginByPassword)
-			authGroup.POST("/login/refresh-token", lgc.RefreshToken)
+			authGroup.POST("/login/using-password",middlewares.GuestJWT(),
+				lgc.LoginByPassword)
+			authGroup.POST("/login/refresh-token",middlewares.GuestJWT(),
+				lgc.RefreshToken)
 			// 重置密码
 			pwc := new(auth.PasswordController)
-			authGroup.POST("/password-reset/using-phone", pwc.ResetByPhone)
-			authGroup.POST("/password-reset/using-email", pwc.ResetByEmail)
+			authGroup.POST("/password-reset/using-phone",middlewares.GuestJWT(),
+				pwc.ResetByPhone)
+			authGroup.POST("/password-reset/using-email",middlewares.GuestJWT(),
+				pwc.ResetByEmail)
 		}
 	}
 }
