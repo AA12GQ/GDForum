@@ -22,9 +22,7 @@ func (sc *SignupController)IsPhoneExist(c *gin.Context){
 	if ok := requests.Validate(c,&request,requests.ValidateSignupPhoneExist); !ok{
 		return
 	}
-	c.JSON(http.StatusOK,gin.H{
-		"exist":user.IsPhoneExist(request.Phone),
-	})
+
 	response.JSON(c,gin.H{
 		"exist" : user.IsPhoneExist(request.Phone),
 	})
