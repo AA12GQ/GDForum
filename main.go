@@ -1,43 +1,59 @@
 package main
 
 import (
+	"GDForum/app/cmd"
 	"GDForum/bootstrap"
 	btsConig "GDForum/config"
 	"GDForum/pkg/config"
-	"flag"
+	"GDForum/pkg/console"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"github.com/spf13/cobra"
+	"os"
 )
 func init(){
 	// 加载 config 目录下的配置信息
 	btsConig.Initialize()
 }
 func main() {
-	var env string
-	flag.StringVar(&env, "env", "", "加载 .env 文件，如 --env=testing 加载的是 .env.testing 文件")
-	flag.Parse()
-	config.InitConfig(env)
 
-	//初始化Logger
-	bootstrap.SetupLogger()
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
-	//初始化DB
-	bootstrap.SetupDB()
-	//初始化redis
-	bootstrap.SetupRedis()
-	//初始化路由绑定
-	bootstrap.SetupRoute(router)
+	// 应用的主入口，默认调用 cmd.CmdServe 命令
+	var rootCmd = &cobra.Command{
+		Use:   config.Get("app.name"),
+		Short: "A simple forum project",
+		Long:  `Default will run "serve" command, you can use "-h" flag to see all subcommands`,
 
+		// rootCmd 的所有子命令都会执行以下代码
+		PersistentPreRun: func(command *cobra.Command, args []string) {
 
-	//sms.NewSMS().Send("13017173106", sms.Message{
-	//	Template: config.GetString("sms.aliyun.template_code"),
-	//	Data:     map[string]string{"code": "123456"},
-	//})
+			// 配置初始化，依赖命令行 --env 参数
+			config.InitConfig(cmd.Env)
 
-	// 运行服务
-	err := router.Run(":" + config.Get("app.port"))
-	if err != nil {
-		fmt.Println(err.Error())
+			// 初始化 Logger
+			bootstrap.SetupLogger()
+
+			// 初始化数据库
+			bootstrap.SetupDB()
+
+			// 初始化 Redis
+			bootstrap.SetupRedis()
+
+			// 初始化缓存
+		},
+	}
+
+	// 注册子命令
+	rootCmd.AddCommand(
+		cmd.CmdServe,
+	)
+
+	// 配置默认运行 Web 服务
+	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServe)
+
+	// 注册全局参数，--env
+	cmd.RegisterGlobalFlags(rootCmd)
+
+	// 执行主命令
+	if err := rootCmd.Execute(); err != nil {
+		console.Exit(fmt.Sprintf("Failed to run app with %v: %s", os.Args, err.Error()))
 	}
 }
