@@ -3,6 +3,7 @@ package main
 import (
 	"GDForum/app/cmd"
 	"GDForum/bootstrap"
+	"GDForum/app/cmd/make"
 	btsConig "GDForum/config"
 	"GDForum/pkg/config"
 	"GDForum/pkg/console"
@@ -46,6 +47,7 @@ func main() {
 		cmd.CmdServe,
 		cmd.CmdKey,
 		cmd.CmdPlay,
+		make.CmdMake,
 	)
 
 	// 配置默认运行 Web 服务
