@@ -3,7 +3,7 @@ package cmd
 import (
 	"GDForum/pkg/migrate"
 	"github.com/spf13/cobra"
-
+	"GDForum/database/migrations"
 )
 
 var CmdMigrate = &cobra.Command{
