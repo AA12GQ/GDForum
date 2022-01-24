@@ -41,3 +41,9 @@ func GetByEmail(email string)(userModel User){
 	database.DB.Where("email = ?",email).First(&userModel)
 	return
 }
+
+//All 获取所有用户数据
+func All()(users []User){
+	database.DB.Find(&users)
+	return
+}
