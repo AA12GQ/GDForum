@@ -2,6 +2,7 @@ package v1
 
 import (
     "GDForum/app/models/user"
+    "GDForum/app/requests"
     "GDForum/pkg/auth"
     "GDForum/pkg/response"
 
@@ -19,6 +20,11 @@ func (ctrl *UsersController) CurrentUser(c *gin.Context) {
 }
 
 func (ctrl *UsersController) Index(c *gin.Context){
+
+    request := requests.PaginationRequest{}
+    if ok := requests.Validate(c,&request,requests.Pagination); !ok{
+        return
+    }
     data,pager := user.Paginate(c,10)
     response.JSON(c,gin.H{
         "data" : data,
