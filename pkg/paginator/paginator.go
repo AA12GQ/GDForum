@@ -2,11 +2,14 @@ package paginator
 
 import (
 	"GDForum/pkg/config"
+	"GDForum/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"math"
 	"strings"
+	"fmt"
 )
 
 // Paging 分页数据
@@ -42,6 +45,27 @@ func Paginate(c *gin.Context,db *gorm.DB,data interface{},baseURL string,perPage
 	}
 	p.initProperties(perPage,baseURL)
 
+	//查询数据库
+	err := p.query.Preload(clause.Associations). // 读取关联
+				Order(p.Sort + " " + p.Order). // 排序
+				Limit(p.PerPage).
+				Offset(p.Offset).
+				Find(data).
+				Error
+
+	if err != nil {
+		logger.LogIf(err)
+		return Paging{}
+	}
+
+	return Paging{
+		CurrentPage: p.Page,
+		PerPage:     p.PerPage,
+		TotalPage:   p.TotalPage,
+		TotalCount:  p.TotalCount,
+		NextPageURL: p.getNextPageURL(),
+		PrevPageURL: p.getPrevPageURL(),
+	}
 }
 
 func (p *Paginator)initProperties(perPage int,baseURL string){
