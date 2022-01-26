@@ -2,6 +2,7 @@ package v1
 
 import (
     "GDForum/app/models/topic"
+    "GDForum/app/policies"
     "GDForum/app/requests"
     "GDForum/pkg/auth"
     "GDForum/pkg/response"
@@ -39,6 +40,11 @@ func (ctrl *TopicsController) Update(c *gin.Context){
     topicModel := topic.Get(c.Param("id"))
     if topicModel.ID == 0{
         response.Abort404(c)
+        return
+    }
+
+    if ok := policies.CanModifyTopic(c,topicModel); !ok {
+        response.Abort403(c)
         return
     }
 
