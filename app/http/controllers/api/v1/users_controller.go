@@ -50,3 +50,20 @@ func (ctrl *UsersController) UpdateProfile(c *gin.Context) {
         response.Abort500(c,"更新失败，请稍后再试~")
     }
 }
+
+func (ctrl *UsersController) UpdateEmail(c *gin.Context) {
+
+    requet := requests.UserUpdateEmailRequest{}
+    if ok := requests.Validate(c,&requet,requests.UserUpdateEmail); !ok {
+        return
+    }
+
+    currentUser := auth.CurrentUser(c)
+    currentUser.Email = requet.Email
+    rowsAffected := currentUser.Save()
+    if rowsAffected > 0{
+        response.Success(c)
+    } else {
+        response.Abort500(c,"更新失败，请稍后再试~")
+    }
+}
