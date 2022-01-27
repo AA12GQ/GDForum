@@ -1,9 +1,12 @@
 package link
 
 import (
+    "GDForum/pkg/cache"
     "GDForum/pkg/database"
     "GDForum/pkg/app"
+    "GDForum/pkg/helpers"
     "GDForum/pkg/paginator"
+    "time"
 
     "github.com/gin-gonic/gin"
 )
@@ -37,5 +40,23 @@ func Paginate(c *gin.Context, perPage int) (links []Link, paging paginator.Pagin
         app.V1URL(database.TableName(&Link{})),
         perPage,
     )
+    return
+}
+
+func AllCached() (links []Link) {
+
+    cacheKey := "links:all"
+
+    expireTime := 120 * time.Minute
+
+    cache.GetObject(cacheKey,&links)
+
+    if helpers.Empty(links) {
+        links = All()
+        if helpers.Empty(links) {
+            return links
+        }
+        cache.Set(cacheKey, links, expireTime)
+    }
     return
 }
