@@ -15,7 +15,6 @@ type CacheService struct {
 var once sync.Once
 var Cache *CacheService
 
-
 func InitWithCacheStore(store Store) {
 	once.Do(func() {
 		Cache = &CacheService{
@@ -25,20 +24,20 @@ func InitWithCacheStore(store Store) {
 }
 
 func Set(key string, obj interface{}, expireTime time.Duration) {
-	b,err := json.Marshal(&obj)
+	b, err := json.Marshal(&obj)
 	logger.LogIf(err)
 	Cache.Store.Set(key, string(b), expireTime)
 }
 
-func Get(key string) interface{}{
+func Get(key string) interface{} {
 	stringValue := Cache.Store.Get(key)
 	var wanted interface{}
-	err := json.Unmarshal([]byte(stringValue),&wanted)
+	err := json.Unmarshal([]byte(stringValue), &wanted)
 	logger.LogIf(err)
 	return wanted
 }
 
-func Has(key string) bool{
+func Has(key string) bool {
 	return Cache.Store.Has(key)
 }
 
