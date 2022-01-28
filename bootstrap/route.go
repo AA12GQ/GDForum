@@ -24,6 +24,7 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
 		middlewares.Logger(),
 		middlewares.Recovery(),
+		middlewares.ForceUA(),
 	)
 }
 func setup404Handler(router *gin.Engine){
