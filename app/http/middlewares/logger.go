@@ -48,8 +48,8 @@ func Logger() gin.HandlerFunc {
 		}
 		if c.Request.Method == "POST" || c.Request.Method == "PUT" || c.Request.Method == "DELETE" {
 			// 请求的内容
-			reqeustBody, _ := c.GetRawData()
-			logFields = append(logFields, zap.String("Request Body", string(reqeustBody)))
+			requestBody, _ := c.GetRawData()
+			logFields = append(logFields, zap.String("Request Body",string(requestBody)))
 
 			// 响应的内容
 			logFields = append(logFields, zap.String("Response Body", w.body.String()))

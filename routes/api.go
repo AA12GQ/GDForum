@@ -20,7 +20,7 @@ func RegisterAPIRoutes(r *gin.Engine){
 	v1.Use(middlewares.LimitIP("200-H"))
 	{
 		authGroup := v1.Group("/auth")
-		authGroup.Use(middlewares.LimitPerRoute("1000-H"))
+		authGroup.Use(middlewares.LimitPerRoute("1000-H"), middlewares.Cors)
 		{
 			suc := new(auth.SignupController)
 			//判断手机号是否被注册
@@ -90,6 +90,11 @@ func RegisterAPIRoutes(r *gin.Engine){
 			lscGroup := v1.Group("/links")
 			{
 				lscGroup.GET("",lsc.Index)
+			}
+			chk := new(controllers.Check404Controller)
+			chkGroup := v1.Group("/check")
+			{
+				chkGroup.POST("",chk.Check404,middlewares.Cors)
 			}
 		}
 	}
