@@ -30,7 +30,6 @@ RUN go build -o gd_forum .
 FROM debian:stretch-slim
 
 COPY ./wait-for.sh /
-COPY ./.env /
 
 # 从builder镜像中把可执行文件拷贝到当前目录
 COPY --from=builder /build/gd_forum /
