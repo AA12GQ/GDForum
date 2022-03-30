@@ -21,7 +21,7 @@ RUN go mod download
 # 将代码复制到容器中
 COPY . .
 
-# 将我们的代码编译成二进制可执行文件 blog_post
+# 将我们的代码编译成二进制可执行文件
 RUN go build -o gd_forum .
 
 ###################
@@ -30,7 +30,7 @@ RUN go build -o gd_forum .
 FROM debian:stretch-slim
 
 COPY ./wait-for.sh /
-COPY ./conf /conf
+COPY ./.env /
 
 # 从builder镜像中把可执行文件拷贝到当前目录
 COPY --from=builder /build/gd_forum /

@@ -18,7 +18,7 @@ services:
       - ./init.sql:/data/application/init.sql
   gd_forum:
     build: .
-    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./gd_forum ./conf/config.yaml"
+    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./gd_forum ./.env"
     depends_on:
       - mysql8019
       - redis507
