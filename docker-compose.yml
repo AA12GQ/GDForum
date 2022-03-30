@@ -16,13 +16,13 @@ services:
       MYSQL_PASSWORD: "myy515156"
     volumes:
       - ./init.sql:/data/application/init.sql
-  blog_post:
+  gd_forum:
     build: .
-    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./blog_post ./conf/config.yaml"
+    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./gd_forum ./conf/config.yaml"
     depends_on:
       - mysql8019
       - redis507
     ports:
-      - "9094:9094"
+      - "3000:3000"
     stdin_open: true
     tty: true
