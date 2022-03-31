@@ -18,7 +18,9 @@ services:
       - ./init.sql:/data/application/init.sql
   gd_forum:
     build: .
-    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- ./gd_forum ./.env"
+    volumes:
+      - .env:/GDForum/.env
+    command: sh -c "./wait-for.sh redis507:6379 mysql8019:3306 -- main.go"
     depends_on:
       - mysql8019
       - redis507

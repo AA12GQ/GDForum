@@ -2,7 +2,9 @@
 package config
 
 import (
+	"GDForum/pkg/console"
 	"GDForum/pkg/helpers"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cast"
@@ -63,6 +65,8 @@ func loadEnv(envSuffix string) {
 
 	// 加载 env
 	viper.SetConfigName(envPath)
+	console.Error(envPath)
+	fmt.Println(envPath)
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
